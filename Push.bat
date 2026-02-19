@@ -1,33 +1,36 @@
 @echo off
 cd /d "%~dp0"
 
-echo Стан репозиторію:
+echo 1. Оновлення даних із хмари (Pull)...
+:: Це дозволить уникнути помилки [rejected]
+git pull origin main --rebase
+
+echo.
+echo 2. Перевірка нових файлів...
 git status --short
 
 echo.
-echo Додавання змін...
+echo 3. Додавання змін...
 git add .
 
-:: Запит коментаря
 set "commit_msg="
 set /p commit_msg="Введіть опис (Enter для авто-дати): "
-
-:: Формуємо чисту дату для повідомлення
-set "auto_msg=Auto-sync EEG-Anorexia: %date% %time%"
+set "auto_msg=Research update: %date% %time%"
 
 echo.
-echo Створення коміту...
-if "%commit_msg%"=="" (
-    git commit -m "%auto_msg%"
+echo 4. Створення коміту...
+:: Перевіряємо, чи є взагалі що комітити
+git diff --quiet --cached
+if %errorlevel% neq 0 (
+    if "%commit_msg%"=="" (git commit -m "%auto_msg%") else (git commit -m "%commit_msg%")
 ) else (
-    git commit -m "%commit_msg%"
+    echo Нових змін для запису не знайдено.
 )
 
 echo.
-echo Відправка на GitHub...
-:: Спробуємо відправити в поточну гілку, якою б вона не була
-git push origin HEAD
+echo 5. Відправка на GitHub...
+git push origin main
 
 echo.
-echo Все готово!
+echo Синхронізацію завершено!
 pause
