@@ -1,0 +1,5 @@
+ "Automated EEG & Eye-Tracking Integration Pipeline for Neuropsychological Research".
+
+Tools: MATLAB, EEGLAB, FieldTrip, sLORETA.
+
+Features: Automated preprocessing, synchronization of multi-modal data, source localization.
